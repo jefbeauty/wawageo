@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet Quick Start Guide Example</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+</head>
+<body>
+	<div id="map" style="width: 100%; height: 400px;"></div>
+	<div id="content" style="clear: both; width: 100%; ">
+		<strong>P&aacute;gina de aux&iacute;lio de localiza&ccedil;&atilde;o de profissionais competentes</strong>
+		<p>Informo que, todos os profissionais indicados aqui s&atilde;o de indica&ccedil;&atilde;o feita unicamente por pacientes. Para visualizar as informa&ccedil;&otilde;es de cada profissional ou cl&iacute;nica, &eacute; necess&aacute;rio clicar/tocar (Caso seu dispositivo seja TOUCH) e aparecer&aacute; um bal&atilde;o com as informa&ccedil;&otilde;es.</p>
+	</div>
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+	<script src="mundo.js"></script>
+	<script>
+
+		var map = L.map('map').setView([-23.5503493, -46.6362925], 13);
+
+		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+			maxZoom: 18,
+			id: 'nuneswar2000.olpendcf',
+			accessToken: 'pk.eyJ1IjoibnVuZXN3YXIyMDAwIiwiYSI6ImNpajl5YTVpNTAwM3N1bGtuYm1wcmd6cTgifQ.V7fUCF9Km9ZLFjebQDCoJQ'
+}).addTo(map);
+
+		function onLocationFound(e) {
+			var radius = e.accuracy / 2;
+
+			L.marker(e.latlng).addTo(map)
+				.bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+			L.circle(e.latlng, radius).addTo(map);
+		}
+
+		function onLocationError(e) {
+			alert(e.message);
+		}
+
+		map.on('locationfound', onLocationFound);
+		map.on('locationerror', onLocationError);
+
+		map.locate({setView: true, maxZoom: 16});
+
+		/*
+			TODO: Pontos importantes de São Paulo
+			
+		*/
+		
+		function onEachFeature(feature, layer) {
+			var popupContent = "<strong>Dados</strong><br>";
+
+			if (feature.properties && feature.properties) {
+				popupContent += "<strong>Telefone: </strong>" + feature.properties.telefone + "<br>";
+				popupContent += "<strong>Crm: </strong>" + feature.properties.crm + "<br>";
+				popupContent += "<strong>Nome: </strong>" + feature.properties.nome + "<br>";
+				popupContent += "<strong>Estado: </strong>" + feature.properties.estado + "<br>";
+				popupContent += "<strong>Município: </strong>" + feature.properties.municipio + "<br>";
+				popupContent += "<strong>Bairro: </strong>" + feature.properties.bairro + "<br>";
+				popupContent += "<strong>Rua: </strong>" + feature.properties.rua + "<br>";
+				popupContent += "<strong>Número: </strong>" + feature.properties.numero + "<br>";
+				
+			}
+			layer.bindPopup(popupContent);
+		}
+
+		L.geoJson([pontos],{
+			onEachFeature: onEachFeature,
+			pointToLayer: function (feature, latlng) {
+				return L.marker(latlng)
+			}
+		}).addTo(map);
+		
+	</script>
+</body>
+</html>
