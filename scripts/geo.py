@@ -56,7 +56,7 @@ def escreveArquivo(f):
         str+= '},\n'
     str += defineRodape()
     print(str)
-    m = open('mundo.js','w')
+    m = open('../www/mundo.js','w')
     m.write(str)
 
 def defineCabecalho():
