@@ -69,5 +69,8 @@ def defineCabecalho():
 def defineRodape():
     str  = ']\n'
     str += '};'
+	
+	#string number.
+	
     return str
 leArquivo('teste.csv')
